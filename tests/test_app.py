@@ -54,7 +54,7 @@ class ContactAppTests(unittest.TestCase):
 
         self.post_form("/logout", {})
         self.register("luis")
-        self.assertEqual(self.client.get("/contacts/{}/edit".format(contact_id)).status_code, 404)
+        self.assertEqual(self.client.get(f"/contacts/{contact_id}/edit").status_code, 404)
         self.assertNotIn("Privado", self.client.get("/export").get_data(as_text=True))
 
     def test_csv_neutralizes_spreadsheet_formulas(self):
