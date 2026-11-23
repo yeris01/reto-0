@@ -35,3 +35,4 @@ Permite crear, buscar, editar, eliminar y exportar contactos a CSV.
 - No hacer commit ni push.
 
 ## Lecciones aprendidas
+- La lógica de acceso a datos y el esquema SQLite se mantienen fuera de app.py para reducir acoplamiento y facilitar el mantenimiento.

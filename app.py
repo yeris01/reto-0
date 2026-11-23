@@ -3,7 +3,6 @@ import io
 import os
 import secrets
 import sqlite3
-from contextlib import closing
 from functools import wraps
 from pathlib import Path
 
@@ -22,6 +21,9 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from database import get_db as database_get_db
+from database import init_db
+
 load_dotenv(Path(__file__).with_name(".env"))
 
 
@@ -38,35 +40,9 @@ def create_app(test_config=None):
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
     def get_db():
-        if "db" not in g:
-            g.db = sqlite3.connect(app.config["DATABASE"])
-            g.db.row_factory = sqlite3.Row
-            g.db.execute("PRAGMA foreign_keys = ON")
-        return g.db
+        return database_get_db(app.config["DATABASE"])
 
-    def init_db():
-        with closing(sqlite3.connect(app.config["DATABASE"])) as db:
-            db.execute("PRAGMA foreign_keys = ON")
-            db.executescript(
-                """
-                CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL UNIQUE,
-                    password_hash TEXT NOT NULL
-                );
-                CREATE TABLE IF NOT EXISTS contacts (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                    name TEXT NOT NULL,
-                    email TEXT NOT NULL DEFAULT '',
-                    phone TEXT NOT NULL DEFAULT '',
-                    notes TEXT NOT NULL DEFAULT ''
-                );
-                """
-            )
-            db.commit()
-
-    init_db()
+    init_db(app.config["DATABASE"])
 
     @app.teardown_appcontext
     def close_db(_error=None):
