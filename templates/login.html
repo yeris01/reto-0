@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <p class="eyebrow">TU AGENDA PERSONAL</p>
+  <h1>Bienvenido</h1>
+  <p class="muted">Inicia sesión para ver tus contactos.</p>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <label>Nombre de usuario<input name="username" required maxlength="80" autocomplete="username"></label>
+    <label>Contraseña<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="button full" type="submit">Iniciar sesión</button>
+  </form>
+  <p class="switch-link">¿Aún no tienes cuenta? <a href="{{ url_for('register') }}">Crear una cuenta</a></p>
+</section>
+{% endblock %}

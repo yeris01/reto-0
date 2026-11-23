@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Mis contactos{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">ESPACIO PERSONAL</p><h1>Mis contactos</h1><p class="muted">Guarda y encuentra rápidamente a tus personas importantes.</p></div>
+  <a class="button" href="{{ url_for('add_contact') }}">＋ Nuevo contacto</a>
+</div>
+<section class="toolbar">
+  <form action="{{ url_for('index') }}" method="get" class="search">
+    <label class="sr-only" for="q">Buscar por nombre</label>
+    <input id="q" name="q" value="{{ query }}" placeholder="Buscar por nombre…" type="search">
+    <button class="button secondary" type="submit">Buscar</button>
+  </form>
+  <a class="export-link" href="{{ url_for('export_csv') }}">↓ Exportar CSV</a>
+</section>
+{% if contacts %}
+<p class="result-count">{{ contacts|length }} contacto{% if contacts|length != 1 %}s{% endif %}{% if query %} para “{{ query }}”{% endif %}</p>
+<div class="contact-list">
+  {% for contact in contacts %}
+  <article class="contact-card">
+    <div class="avatar">{{ contact.name[:1]|upper }}</div>
+    <div class="contact-info">
+      <h2>{{ contact.name }}</h2>
+      {% if contact.email %}<p>{{ contact.email }}</p>{% endif %}
+      {% if contact.phone %}<p>{{ contact.phone }}</p>{% endif %}
+      {% if contact.notes %}<p class="notes">{{ contact.notes }}</p>{% endif %}
+    </div>
+    <div class="actions">
+      <a href="{{ url_for('edit_contact', contact_id=contact.id) }}">Editar</a>
+      <form method="post" action="{{ url_for('delete_contact', contact_id=contact.id) }}" onsubmit="return confirm('¿Eliminar este contacto?')">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <button class="danger-link" type="submit">Eliminar</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<section class="empty-state">
+  <div class="empty-icon">◎</div>
+  <h2>{% if query %}No se encontraron contactos{% else %}Tu agenda empieza aquí{% endif %}</h2>
+  <p>{% if query %}Prueba con otro nombre.{% else %}Añade tu primer contacto para tener su información a mano.{% endif %}</p>
+  {% if not query %}<a class="button" href="{{ url_for('add_contact') }}">Añadir un contacto</a>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

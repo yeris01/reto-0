@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Crear cuenta{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <p class="eyebrow">EMPIEZA AQUÍ</p>
+  <h1>Crea tu cuenta</h1>
+  <p class="muted">Tus contactos serán privados para tu usuario.</p>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <label>Nombre de usuario<input name="username" required maxlength="80" autocomplete="username"></label>
+    <label>Contraseña<input type="password" name="password" required minlength="8" autocomplete="new-password"><small>Al menos 8 caracteres.</small></label>
+    <button class="button full" type="submit">Crear cuenta</button>
+  </form>
+  <p class="switch-link">¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
+</section>
+{% endblock %}

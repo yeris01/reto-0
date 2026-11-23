@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar contacto' if contact else 'Nuevo contacto' }}{% endblock %}
+{% block content %}
+<section class="form-card">
+  <a class="back-link" href="{{ url_for('index') }}">← Volver a contactos</a>
+  <p class="eyebrow">DETALLES DE CONTACTO</p>
+  <h1>{{ 'Editar contacto' if contact else 'Nuevo contacto' }}</h1>
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <label>Nombre <span class="required">*</span><input name="name" required maxlength="160" value="{{ contact.name if contact else '' }}" autofocus></label>
+    <label>Correo electrónico<input type="email" name="email" maxlength="254" value="{{ contact.email if contact else '' }}" placeholder="nombre@ejemplo.com"></label>
+    <label>Teléfono<input type="tel" name="phone" maxlength="40" value="{{ contact.phone if contact else '' }}"></label>
+    <label>Notas<textarea name="notes" rows="4" maxlength="2000" placeholder="Información adicional…">{{ contact.notes if contact else '' }}</textarea></label>
+    <div class="form-actions"><a class="button secondary" href="{{ url_for('index') }}">Cancelar</a><button class="button" type="submit">{{ 'Guardar cambios' if contact else 'Guardar contacto' }}</button></div>
+  </form>
+</section>
+{% endblock %}
